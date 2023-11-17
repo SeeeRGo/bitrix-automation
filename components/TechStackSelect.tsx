@@ -1,0 +1,65 @@
+import * as React from 'react';
+import Autocomplete from '@mui/material/Autocomplete';
+import { debounce } from '@mui/material/utils';
+import axios from 'axios';
+import { TechStack } from '../app/types';
+import { TextField } from './TextField';
+
+interface IProps {
+  techStack: TechStack | null
+  setTechStack: (techStack: TechStack | null) => void
+}
+
+export default function TechStackSelect({ techStack, setTechStack }: IProps) {
+  const [inputValue, setInputValue] = React.useState('');
+  const [options, setOptions] = React.useState<TechStack[]>([]);
+  
+  const loadOptions = React.useCallback(
+    () => {
+      axios
+        .get(`${process.env.NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.deal.userfield.get?id=1037`)
+        .then(({ data: { result: { LIST } }}) => setOptions(LIST))
+    }, []
+  )
+  const searchDelayed = React.useMemo(
+    () => debounce(loadOptions, 150),
+    [loadOptions]
+  )
+  
+  React.useEffect(() => {
+    searchDelayed()
+  }, [searchDelayed]);
+
+  return (
+    <Autocomplete
+      id="techStack-autocomplete"
+      getOptionLabel={(option) =>
+        typeof option === 'string' ? option : option.VALUE
+      }
+      filterOptions={(x) => x}
+      options={options.filter(option => option.VALUE.includes(inputValue))}
+      autoComplete
+      includeInputInList
+      filterSelectedOptions
+      value={techStack}
+      noOptionsText="Нет подходящих вариантов"
+      onChange={(event: any, newValue: TechStack | null) => {
+        setOptions(newValue ? [newValue, ...options] : options);
+        setTechStack(newValue);
+      }}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
+      renderInput={(params) => (
+        <TextField {...params} required label="Выбрать направление" fullWidth />
+      )}
+      renderOption={(props, option) => {
+        return (
+          <li {...props}>
+            {option.VALUE}
+          </li>
+        );
+      }}
+    />
+  );
+}

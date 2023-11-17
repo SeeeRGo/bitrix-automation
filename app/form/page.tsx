@@ -1,4 +1,4 @@
-import { CandidateSuggestForm } from "../../../components/CandidateSuggestForm";
+import { CandidateSuggestForm } from "../../components/CandidateSuggestForm";
 
 export default function Form({params}: { params: { id: string }}) {
   return (
