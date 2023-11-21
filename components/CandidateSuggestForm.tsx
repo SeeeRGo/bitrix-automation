@@ -7,6 +7,9 @@ import { useForm } from 'react-hook-form';
 import { SpecialistInfoForm } from './SpecialistInfoForm';
 import { ContactInfoForm } from './ContactInfoForm';
 import axios from 'axios';
+import Image from 'next/image';
+import Logo from '../assets/COSYSOFT LOGO.png';
+
 
 // "UF_CRM_1700553861085": {
 //   "type": "string",
@@ -48,7 +51,8 @@ export const CandidateSuggestForm = () => {
   ) : (
     <Box style={{ display: 'flex', width: '100%', height: '100vh', justifyContent: 'center', alignItems: 'center'}}>
       <Stack rowGap={2} sx={{ width: '50%', minWidth: 500, maxWidth: 800 }}>
-        <div style={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <Image src={Logo} alt='Лого' width={192} height={108} />
           <Typography variant='h4' fontWeight="bold">Форма предложения кандидата</Typography>
         </div>
         <Typography variant='h6'>Информация о специалисте</Typography>
@@ -60,7 +64,7 @@ export const CandidateSuggestForm = () => {
           onClick={() => {
             setIsLoading(true)
             handleSubmit(async (data) => {
-              const { comment, company, contactEmail, contactName, contactPhone, contactPosition, contactTelegram, grade, location, resume, specialistName, techStack } = data
+              const { comment, company, contactEmail, contactName, contactPhone, contactPosition, contactTelegram, grade, location, resume, specialistName, techStack, rate } = data
               const contactInfo = `
                 Компания: ${company};\n
                 ФИО: ${contactName};\n
@@ -79,9 +83,10 @@ export const CandidateSuggestForm = () => {
                   CATEGORY_ID: '19', // Воронка Рекрутинг внешних аутстафферов
                   UF_CRM_1679398819: [grade], // Грейд
                   UF_CRM_1679398471982: location, // Локация
+                  UF_CRM_1657089293199: rate,  // Ставка
                   UF_CRM_1699960799: techStack.ID, // Направление стек технологий
                   ASSIGNED_BY_ID: "125",  // Алекксандр Меренчук
-                  UF_CRM_653B806285E93: {fileData: resume}, // Резюме
+                  UF_CRM_653B806285E93: [{name: resume?.name, size: resume?.size, file: resume, type: resume?.type}], // Резюме
                   UF_CRM_1700553861085: contactInfo
                 }
               }, {

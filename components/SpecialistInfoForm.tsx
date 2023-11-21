@@ -98,8 +98,8 @@ export const SpecialistInfoForm = ({ register, control, watch, errors, setValue 
           </FormControl>
           );
         }} />
-      <TextField label="Ставка" required {...register('rate', { required:  'Поле обязательно к заполнению' })} error={!!errors.rate?.message} helperText={errors.rate?.message} />
-      <TextField label="Комментарий" multiline minRows={5} {...register('comment')} />
+      <TextField label="Ставка, руб" required type="number" {...register('rate', { required:  'Поле обязательно к заполнению' })} error={!!errors.rate?.message} helperText={errors.rate?.message} />
+      <TextField label="Комментарий" multiline rows={5} {...register('comment')} />
       <Controller control={control} name="resume" rules={{ required:  'Поле обязательно к заполнению' }} render={
         ({ field: { value, onChange, ...field } }) => {          
           return (
@@ -109,7 +109,7 @@ export const SpecialistInfoForm = ({ register, control, watch, errors, setValue 
                   type="file"
                   hidden
                   id="file-input"
-                  accept="application/msword,application/vnd.openxmlformats-"
+                  accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   onChange={(event) => {
                     if (event.target.files) {
                       onChange(event.target.files[0]);
