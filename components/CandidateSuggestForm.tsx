@@ -2,7 +2,7 @@
 "use client"
 import React, { useState } from 'react'
 import { Inputs } from '../app/types';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { SpecialistInfoForm } from './SpecialistInfoForm';
 import { ContactInfoForm } from './ContactInfoForm';
@@ -33,6 +33,9 @@ import Logo from '../assets/COSYSOFT LOGO.png';
 //   }
 //   }
 
+const Submitted = () => <Typography>Информация о кандидате отправлена в CosySoft.
+Благодарим за сотрудничество!</Typography>
+
 export const CandidateSuggestForm = () => {
   const {
     register,
@@ -43,14 +46,16 @@ export const CandidateSuggestForm = () => {
     formState: { errors },
   } = useForm<Inputs>()
   const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
-  return isLoading ? (
-    <div style={{ display: 'flex', width: '100%', minHeight: '100%', alignItems: 'center', justifyContent: 'center'}}>
-      Loading...
-    </div>
-  ) : (
+  return (
     <Box style={{ display: 'flex', width: '100%', height: '100vh', justifyContent: 'center', alignItems: 'center'}}>
-      <Stack rowGap={2} sx={{ width: '50%', minWidth: 500, maxWidth: 800 }}>
+      {isLoading ? (
+    <div style={{ display: 'flex', width: '100%', minHeight: '100%', alignItems: 'center', justifyContent: 'center'}}>
+      <CircularProgress />
+    </div>
+  ) : isSubmitted ? <Submitted /> : (
+    <Stack rowGap={2} sx={{ width: '50%', minWidth: 500, maxWidth: 800 }}>
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
           <Image src={Logo} alt='Лого' width={192} height={108} />
           <Typography variant='h4' fontWeight="bold">Форма предложения кандидата</Typography>
@@ -73,7 +78,7 @@ export const CandidateSuggestForm = () => {
                 E-mail: ${contactEmail};\n
                 ${contactPhone ? `Телефон: ${contactPhone};\n` : ''}
               `
-              // const formData = new FormData();
+              const formData = new FormData();
               
               await axios.post(`${process.env.NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.deal.add`, {
                 fields: {
@@ -106,11 +111,13 @@ export const CandidateSuggestForm = () => {
               })
             })()
             setIsLoading(false)          
+            setIsSubmitted(true)
           }}
         >
           Предложить специалиста
         </Button>
       </Stack>
+  )}
     </Box>
   )
 }
