@@ -8,9 +8,10 @@ import { TextField } from './TextField';
 interface IProps {
   techStack: TechStack | null
   setTechStack: (techStack: TechStack | null) => void
+  error?: string
 }
 
-export default function TechStackSelect({ techStack, setTechStack }: IProps) {
+export default function TechStackSelect({ techStack, setTechStack, error }: IProps) {
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState<TechStack[]>([]);
   
@@ -41,7 +42,7 @@ export default function TechStackSelect({ techStack, setTechStack }: IProps) {
       autoComplete
       includeInputInList
       filterSelectedOptions
-      value={techStack}
+      value={techStack ?? {ID: '', VALUE: ''}}
       noOptionsText="Нет подходящих вариантов"
       onChange={(event: any, newValue: TechStack | null) => {
         setOptions(newValue ? [newValue, ...options] : options);
@@ -51,7 +52,7 @@ export default function TechStackSelect({ techStack, setTechStack }: IProps) {
         setInputValue(newInputValue);
       }}
       renderInput={(params) => (
-        <TextField {...params} required label="Выбрать направление" fullWidth />
+        <TextField {...params} required label="Выбрать направление" fullWidth error={!!error} helperText={error} />
       )}
       renderOption={(props, option) => {
         return (

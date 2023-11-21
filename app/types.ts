@@ -23,7 +23,8 @@ export interface Inputs {
   specialistName: string
   techStack: TechStack
   grade: string
+  rate: string
   location: string
-  resume: File
+  resume: File | undefined
   comment: string
 }
