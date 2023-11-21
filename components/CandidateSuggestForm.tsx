@@ -6,6 +6,7 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { SpecialistInfoForm } from './SpecialistInfoForm';
 import { ContactInfoForm } from './ContactInfoForm';
+import axios from 'axios';
 // import axios from 'axios'
 
 
@@ -71,37 +72,27 @@ import { ContactInfoForm } from './ContactInfoForm';
 //     }
 //   ]
 // }
-// const assignedFieldSettings = {
-//   fieldName: 'ASSIGNED_BY_ID',
-//   fieldLabel: 'Ответственный',
-//   type: 'select',
-//   items: [
-//     {
-//     "ID": "55",
-//     "VALUE": "Наталья Ведянова"
-//     },
-//     {
-//     "ID": "125",
-//     "VALUE": "Александр Меренчук"
-//     },
-//   ]
-// }
-
-// const getStageID = (status: IMessage['status']) => {
-//   switch (status) {
-//     case MessageStatus.INTERESTING:
-//       return 'C21:PREPAYMENT_INVOIC'
-//       case MessageStatus.APPROVED:
-//       return 'C21:NEW'
-//     default:
-//       return 'NEW'
+// "UF_CRM_1700553861085": {
+//   "type": "string",
+//   "isRequired": false,
+//   "isReadOnly": false,
+//   "isImmutable": false,
+//   "isMultiple": false,
+//   "isDynamic": true,
+//   "title": "UF_CRM_1700553861085",
+//   "listLabel": "Контактная информация из партнёрской формы",
+//   "formLabel": "Контактная информация из партнёрской формы",
+//   "filterLabel": "Контактная информация из партнёрской формы",
+//   "settings": {
+//   "SIZE": 20,
+//   "ROWS": 1,
+//   "REGEXP": "",
+//   "MIN_LENGTH": 0,
+//   "MAX_LENGTH": 0,
+//   "DEFAULT_VALUE": null
 //   }
-// }
-
-// Relevant deals (STAGE_ID - стадия сделки интересное/потенциально интересное)
-// {NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.deal.list?order[ID]=desc&filter[CATEGORY_ID]=21
-// Воронки (Categories - запросы аутстафф это ID=21)
-// {NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.category.list?entityTypeId=2
+//   }
+//   }
 
 export const CandidateSuggestForm = () => {
   const {
@@ -140,22 +131,22 @@ export const CandidateSuggestForm = () => {
                 ${contactPhone ? `Телефон: ${contactPhone};\n` : ''}
               `
               
-              // axios.post(`${process.env.NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.deal.add`, {
-              //   fields: {
-              //     UF_CRM_1684418451: "197", // Аутстафф
-              //     TITLE: title,
-              //     SOURCE_ID: "1", // Источник: Телеграм чат с партнёрами
-              //     CATEGORY_ID: '19', // Воронка Рекрутинг внешних аутстафферов
-              //     UF_CRM_1679398819: grade, // Грейд
-              //     UF_CRM_1679398471982: location, // Локация
-              //     UF_CRM_1699960799: techStack.ID, // Направление стек технологий
-              //     ASSIGNED_BY_ID: "55",  // Наталья Ведянова
-              //     COMMENTS: comment, // Комментарий
-              //     UF_CRM_653B806285E93: resume // Резюме
-              //     ФИО Специалиста: specialistName
-              //     Контактная Инфа: contactInfo
-              //   }
-              // })
+              axios.post(`${process.env.NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.deal.add`, {
+                fields: {
+                  UF_CRM_1684418451: "197", // Аутстафф
+                  TITLE: techStack.VALUE,
+                  SOURCE_ID: "1", // Источник: Телеграм чат с партнёрами
+                  CATEGORY_ID: '19', // Воронка Рекрутинг внешних аутстафферов
+                  UF_CRM_1679398819: grade, // Грейд
+                  UF_CRM_1679398471982: location, // Локация
+                  UF_CRM_1699960799: techStack.ID, // Направление стек технологий
+                  ASSIGNED_BY_ID: "55",  // Наталья Ведянова
+                  COMMENTS: comment, // Комментарий
+                  UF_CRM_653B806285E93: resume, // Резюме
+                  'ФИО Специалиста': specialistName,
+                  UF_CRM_1700553861085: contactInfo
+                }
+              })
             })()
             setIsLoading(false)          
           }}
