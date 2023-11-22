@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import './globals.css'
 import ThemeRegistry from './ThemeRegistry'
 
 export const metadata: Metadata = {
