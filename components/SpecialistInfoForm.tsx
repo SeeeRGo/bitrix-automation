@@ -1,9 +1,8 @@
-import { Button, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, Stack, Typography } from "@mui/material"
+import { Button, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, Stack, TextField, Typography } from "@mui/material"
 import FileUploadOutlined from "@mui/icons-material/FileUploadOutlined";
 
 import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from "react-hook-form"
 import { Inputs } from "../app/types"
-import { FormControl, TextField } from "./TextField";
 import TechStackSelect from "./TechStackSelect";
 import { CloseOutlined } from "@mui/icons-material";
 interface IProps {

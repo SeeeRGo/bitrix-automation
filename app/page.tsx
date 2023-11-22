@@ -2,7 +2,7 @@ import { CandidateSuggestForm } from "../components/CandidateSuggestForm";
 
 export default async function Home() {  
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
       <CandidateSuggestForm />
     </main>
   )

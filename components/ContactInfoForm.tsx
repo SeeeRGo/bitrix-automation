@@ -1,7 +1,6 @@
-import { Stack } from "@mui/material"
+import { Stack, TextField } from "@mui/material"
 import { FieldErrors, UseFormRegister } from "react-hook-form"
 import { Inputs } from "../app/types"
-import { TextField } from "./TextField"
 interface IProps {
   register: UseFormRegister<Inputs>
   errors: FieldErrors<Inputs>

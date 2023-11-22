@@ -3,7 +3,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { debounce } from '@mui/material/utils';
 import axios from 'axios';
 import { TechStack } from '../app/types';
-import { TextField } from './TextField';
+import { TextField } from '@mui/material';
 
 interface IProps {
   techStack: TechStack | null
