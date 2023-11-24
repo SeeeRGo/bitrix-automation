@@ -9,7 +9,7 @@ import { ContactInfoForm } from './ContactInfoForm';
 import axios from 'axios';
 import Image from 'next/image';
 import Logo from '../assets/COSYSOFT LOGO.png';
-
+import { Submitted } from './Submitted';
 
 // "UF_CRM_1700553861085": {
 //   "type": "string",
@@ -33,8 +33,18 @@ import Logo from '../assets/COSYSOFT LOGO.png';
 //   }
 //   }
 
-const Submitted = () => <Typography>Информация о кандидате отправлена в CosySoft.
-Благодарим за сотрудничество!</Typography>
+const convertBase64 = (file: File) => new Promise((resolve, reject) => {
+  const fileReader = new FileReader()
+  fileReader.readAsDataURL(file)
+
+  fileReader.onload = () => {
+    resolve(fileReader.result)
+  }
+
+  fileReader.onerror = (error) => {
+    reject(error)
+  }
+})
 
 export const CandidateSuggestForm = () => {
   const {
@@ -43,6 +53,7 @@ export const CandidateSuggestForm = () => {
     control,
     watch,
     setValue,
+    resetField,
     formState: { errors },
   } = useForm<Inputs>()
   const [isLoading, setIsLoading] = useState(false)
@@ -54,9 +65,18 @@ export const CandidateSuggestForm = () => {
       <div style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
         <CircularProgress />
       </div>
-    ) : isSubmitted ? <Submitted /> : (
+    ) : isSubmitted ? <Submitted onReturn={() => {
+          resetField('comment');
+          resetField('grade');
+          resetField('location');
+          resetField('rate');
+          resetField('resume');
+          resetField('specialistName');
+          resetField('techStack');
+          setIsSubmitted(false);
+        }} /> : (
       <Stack rowGap={2} sx={{ width: '100%', height: '100%', minWidth: 500, maxWidth: 800 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center', rowGap: '12px' }}>
             <Image src={Logo} alt='Лого' width={192} height={108} />
             <Typography variant='h4' fontWeight="bold">Форма предложения кандидата</Typography>
           </div>
@@ -78,8 +98,12 @@ export const CandidateSuggestForm = () => {
                   E-mail: ${contactEmail};\n
                   ${contactPhone ? `Телефон: ${contactPhone};\n` : ''}
                 `
-                const formData = new FormData();
-                
+                let encodedResume: string = ''
+                if (resume) {
+                  encodedResume = await convertBase64(resume) as string
+                  encodedResume = encodedResume.split(',').at(-1) ?? ''     
+                }
+                                
                 await axios.post(`${process.env.NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.deal.add`, {
                   fields: {
                     UF_CRM_1684418451: "197", // Аутстафф
@@ -90,14 +114,12 @@ export const CandidateSuggestForm = () => {
                     UF_CRM_1679398471982: location, // Локация
                     UF_CRM_1657089293199: rate,  // Ставка
                     UF_CRM_1699960799: techStack.ID, // Направление стек технологий
+                    UF_CRM_653B806285E93: { fileData: [resume?.name, encodedResume] }, // Резюме
                     ASSIGNED_BY_ID: "125",  // Алекксандр Меренчук
-                    UF_CRM_653B806285E93: [{name: resume?.name, size: resume?.size, file: resume, type: resume?.type}], // Резюме
                     UF_CRM_1700553861085: contactInfo
                   }
-                }, {
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }}).then(({ data: { result } }) => {
+                })
+                .then(async ({ data: { result } }) => {
                   if (comment) {
                     axios.post(`${process.env.NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.timeline.comment.add`, {
                       fields: {
@@ -109,9 +131,9 @@ export const CandidateSuggestForm = () => {
                   }
                   return result
                 })
+                setIsLoading(false)          
+                setIsSubmitted(true)
               })()
-              setIsLoading(false)          
-              setIsSubmitted(true)
             }}
           >
             Предложить специалиста
