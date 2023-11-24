@@ -57,7 +57,7 @@ export const CandidateSuggestForm = () => {
     formState: { errors },
   } = useForm<Inputs>()
   const [isLoading, setIsLoading] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(true)
 
   return (
       <Box padding={3} style={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center'}}>
