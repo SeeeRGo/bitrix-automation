@@ -13,7 +13,7 @@ export interface TechStack {
   VALUE: string;
 }
 
-export interface Inputs {
+interface BaseInputs {
   company: string
   contactName: string
   contactPosition: string
@@ -25,6 +25,13 @@ export interface Inputs {
   grade: string
   rate: string
   location: string
-  resume: File | undefined
   comment: string
+}
+
+export interface Inputs extends BaseInputs {
+  resume: File | undefined
+}
+
+export interface ApiInputs extends BaseInputs {
+  fileData: { fileData: [string, string] }
 }

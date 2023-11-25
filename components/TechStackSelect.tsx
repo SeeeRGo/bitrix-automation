@@ -18,7 +18,7 @@ export default function TechStackSelect({ techStack, setTechStack, error }: IPro
   const loadOptions = React.useCallback(
     () => {
       axios
-        .get(`${process.env.NEXT_PUBLIC_BITRIX_WEBHOOK_URL}/crm.deal.userfield.get?id=1037`)
+        .get('/techstack')
         .then(({ data: { result: { LIST } }}) => setOptions(LIST))
     }, []
   )

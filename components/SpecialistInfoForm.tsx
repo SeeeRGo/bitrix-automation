@@ -65,9 +65,7 @@ const locationFieldSettings = {
   ]
 }
 export const SpecialistInfoForm = ({ register, control, watch, errors, setValue }: IProps) => {
-  const fileName = watch('resume')
-  console.log('fileName', fileName);
-  
+  const fileName = watch('resume')  
   
   return (
     <Stack rowGap={1.5}>

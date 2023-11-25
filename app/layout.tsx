@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import ThemeRegistry from './ThemeRegistry'
+import { HighlightInit } from '@highlight-run/next/client'
 
 export const metadata: Metadata = {
   title: 'Предлагайте ваших специалистов',
@@ -12,10 +13,22 @@ export default function RootLayout({
   children: JSX.Element
 }) {
   return (
-    <html lang="en">
-      <body>
-        <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
-      </body>
-    </html>
+    <>
+    	<HighlightInit
+				projectId={'ng2ozxpd'}
+				serviceName="external-outstaff-requests"
+				tracingOrigins
+				networkRecording={{
+					enabled: true,
+					recordHeadersAndBody: true,
+					urlBlocklist: [],
+				}}
+			/>
+      <html lang="en">
+        <body>
+          <ThemeRegistry options={{ key: 'mui' }}>{children}</ThemeRegistry>
+        </body>
+      </html>
+    </>
   );
 }
