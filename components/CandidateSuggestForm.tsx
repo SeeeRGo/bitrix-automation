@@ -2,7 +2,7 @@
 "use client"
 import React, { useState } from 'react'
 import { Inputs } from '../app/types';
-import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Snackbar, Stack, StackProps, Theme, Typography, styled } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { SpecialistInfoForm } from './SpecialistInfoForm';
 import { ContactInfoForm } from './ContactInfoForm';
@@ -33,7 +33,18 @@ import { convertBase64 } from '../utils/convertBase64';
 //   }
 //   }
 //   }
-
+const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
+  width: '100%', 
+  height: '100%',
+  [theme.breakpoints.down('md')]: {
+    minWidth: '100%',
+    maxWidth: '100%',
+  },
+  [theme.breakpoints.up('md')]: {
+    minWidth: 500,
+    maxWidth: 800,    
+  }
+}))
 export const CandidateSuggestForm = () => {
   const {
     register,
@@ -46,6 +57,7 @@ export const CandidateSuggestForm = () => {
   } = useForm<Inputs>()
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
   return (
       <Box padding={3} style={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center'}}>
@@ -63,7 +75,7 @@ export const CandidateSuggestForm = () => {
           resetField('techStack');
           setIsSubmitted(false);
         }} /> : (
-      <Stack rowGap={2} sx={{ width: '100%', height: '100%', minWidth: 500, maxWidth: 800 }}>
+      <StyledStack rowGap={2}>
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'center', alignItems: 'center', rowGap: '12px' }}>
             <Image src={Logo} alt='Лого' width={192} height={108} />
             <Typography variant='h4' fontWeight="bold">Форма предложения кандидата</Typography>
@@ -82,17 +94,28 @@ export const CandidateSuggestForm = () => {
                   encodedResume = await convertBase64(resume) as string
                   encodedResume = encodedResume.split(',').at(-1) ?? ''     
                 }
-                const res = await axios.post('/api', { ...data, fileData: {fileData: [resume?.name ?? '', encodedResume]} })
-                console.log('res data', res.data);
-                setIsLoading(false)          
-                setIsSubmitted(true)
+                try {
+                  const res = await axios.post('/api', { ...data, fileData: {fileData: [resume?.name ?? '', encodedResume]} })
+                  console.log('res data', res.data);
+                  setIsLoading(false)          
+                  setIsSubmitted(true)
+                } catch (e) {
+                  setIsLoading(false)
+                  setError('Произошла ошибка в процессе подачи заявки, пожалуйста, попробуйте ещё раз')
+                  console.error(e)   
+                }
               })()
             }}
           >
             Предложить специалиста
           </Button>
-        </Stack>
+        </StyledStack>
     )}
-      </Box>
+    <Snackbar open={!!error} autoHideDuration={6000} onClose={() => { setError('') }}>
+      <Alert onClose={() => { setError('') }} severity="error" sx={{ width: '100%' }}>
+        {error}
+      </Alert>
+    </Snackbar>
+  </Box>
   )
 }
