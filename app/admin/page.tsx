@@ -21,8 +21,8 @@ export default function Admin() {
             <Card>
               <Typography>ID: {ID}</Typography>
               <Typography>TITLE: {TITLE}</Typography>
-              <Typography><Link href={`https://bitrix-automation.vercel.app/active_request_id=${ID}`}>Ссылка для партнеров</Link><ContentCopy onClick={() => {
-                navigator.clipboard.writeText(`https://bitrix-automation.vercel.app/active_request_id=${ID}`)
+              <Typography><Link href={`https://bitrix-automation.vercel.app?active_request_id=${ID}`}>Ссылка для партнеров</Link><ContentCopy onClick={() => {
+                navigator.clipboard.writeText(`https://bitrix-automation.vercel.app?active_request_id=${ID}`)
                 setSuccess('Ссылка успешно скопирована')
               }} /></Typography>
             </Card>
