@@ -45,7 +45,10 @@ const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
     maxWidth: 800,    
   }
 }))
-export const CandidateSuggestForm = () => {
+interface IProps {
+  activeRequestId: string | null
+}
+export const CandidateSuggestForm = ({ activeRequestId }: IProps) => {
   const {
     register,
     handleSubmit,
@@ -97,6 +100,10 @@ export const CandidateSuggestForm = () => {
                 try {
                   const res = await axios.post('/api', { ...data, fileData: {fileData: [resume?.name ?? '', encodedResume]} })
                   console.log('res data', res.data);
+                  if (activeRequestId) {
+                    const quoteRes = await axios.post('/api/quotes', {...data, fileData: {fileData: [resume?.name ?? '', encodedResume]}, activeRequestId })
+                    console.log('quoteRes data', quoteRes.data);
+                  }
                   setIsLoading(false)          
                   setIsSubmitted(true)
                 } catch (e) {
