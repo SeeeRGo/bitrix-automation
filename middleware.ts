@@ -12,7 +12,7 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path)
  
   // 3. Decrypt the session from the cookie
-  const cookie = cookies().get('authjs.session-token')?.value
+  const cookie = cookies().get('__Secure-authjs.session-token')?.value
   const session = cookie  
  
   // 5. Redirect to /login if the user is not authenticated
