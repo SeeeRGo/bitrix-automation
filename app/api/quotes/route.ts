@@ -119,7 +119,7 @@ export async function POST(request: Request) {
       UF_CRM_64CCB79D102EB: location, // Локация
       UF_CRM_64CCB79BB913B: project, // Проект
       UF_CRM_64CCB79BAEAA3: rate1, // Ставка 1
-      UF_CRM_65D603D989F22: rate, // Ставка 2
+      UF_CRM_QUOTE_1724244327601: rate, // Ставка специалиста
       UF_CRM_654100304A99D: fileData, // Файл резюме
       UF_CRM_64CCB79D1DDA6: quoteGrade ? [quoteGrade] : [], // Грейд
       COMMENTS: contactInfo,
