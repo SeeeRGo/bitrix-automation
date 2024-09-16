@@ -34,9 +34,9 @@ export async function POST(request: Request) {
     COMMENTS: contactInfo,
   }
   
-  const list = await axios.post(`${process.env.BITRIX_WEBHOOK}/crm.quote.add`, {
+  const quoteId = await axios.post(`${process.env.BITRIX_WEBHOOK}/crm.quote.add`, {
 		fields
-	})  .then(async ({ data: { result } }) => {
+	}).then(async ({ data: { result } }) => {
     if (contactInfo) {
       axios.post(`${process.env.BITRIX_WEBHOOK}/crm.timeline.comment.add`, {
         fields: {
@@ -48,7 +48,6 @@ export async function POST(request: Request) {
     }
     return result
   })
-  .then(({ data }) => data.result)
  
-  return Response.json(list)
+  return Response.json({ message: `Форма успешно отправлена ${quoteId}` })
 }
