@@ -5,6 +5,7 @@ import axios from "axios"
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+const projectField = 'UF_CRM_1657089402507'
 export default function Admin() {
   const [data, setData] = useState([])
   const [success, setSuccess] = useState('')
@@ -13,14 +14,15 @@ export default function Admin() {
   }, [])
   
   return (
-    <main style={{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+    <main style={{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: 16 }}>
       <Typography variant="h5">Прямые запросы в работе</Typography>
       <Grid container rowGap={2} columnGap={2}>
-        {data.map(({ ID, TITLE }) => (
+        {data.map(({ ID, TITLE, ...rest }: any) => (
           <Grid item key={ID}>
-            <Card>
+            <Card sx={{ padding: 2 }}>
               <Typography>ID: {ID}</Typography>
               <Typography>TITLE: {TITLE}</Typography>
+              <Typography>Project: {rest[projectField] ?? 'Нет информации по проекту'}</Typography>
               <Typography><Link href={`https://bitrix-automation.vercel.app?active_request_id=${ID}`}>Ссылка для партнеров</Link><ContentCopy onClick={() => {
                 navigator.clipboard.writeText(`https://bitrix-automation.vercel.app?active_request_id=${ID}`)
                 setSuccess('Ссылка успешно скопирована')
