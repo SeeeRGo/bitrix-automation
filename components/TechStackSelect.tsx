@@ -4,6 +4,7 @@ import { debounce } from '@mui/material/utils';
 import axios from 'axios';
 import { TechStack } from '../app/types';
 import { TextField } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
 
 interface IProps {
   techStack: TechStack | null
@@ -13,14 +14,16 @@ interface IProps {
 
 export default function TechStackSelect({ techStack, setTechStack, error }: IProps) {
   const [inputValue, setInputValue] = React.useState('');
+  const searchParams = useSearchParams()
+  const activeRequestId = searchParams.get('active_request_id')
   const [options, setOptions] = React.useState<TechStack[]>([]);
   
   const loadOptions = React.useCallback(
     () => {
       axios
-        .get('/techstack')
+        .get(`/techstack${activeRequestId ? '?is_quote=true' : ''}`)
         .then(({ data: { result: { LIST } }}) => setOptions(LIST))
-    }, []
+    }, [activeRequestId]
   )
   const searchDelayed = React.useMemo(
     () => debounce(loadOptions, 150),

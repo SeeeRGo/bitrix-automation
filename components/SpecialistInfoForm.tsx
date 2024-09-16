@@ -5,19 +5,17 @@ import { Control, Controller, FieldErrors, UseFormRegister, UseFormSetValue, Use
 import { Inputs } from "../app/types"
 import TechStackSelect from "./TechStackSelect";
 import { CloseOutlined } from "@mui/icons-material";
+import { useSearchParams } from "next/navigation";
 interface IProps {
   register: UseFormRegister<Inputs>
   control: Control<Inputs, any>
   watch: UseFormWatch<Inputs>
   errors: FieldErrors<Inputs>
   setValue: UseFormSetValue<Inputs>
+  isQuote: boolean
 }
 
-const gradeFieldSettings = {
-  fieldName: 'UF_CRM_1679398819',
-  fieldLabel: 'Грейд',
-  type: 'select',
-  items: [
+const gradeDealItems = [
     {
     "ID": "177",
     "VALUE": "Junior"
@@ -39,13 +37,49 @@ const gradeFieldSettings = {
     "VALUE": "Lead"
     }
   ]
-}
+const gradeQuoteFieldItems = [
+  {
+  "ID": "277",
+  "VALUE": "РФ",
+  },
+  {
+  "ID": "279",
+  "VALUE": "РФ + РБ",
+  },
+  {
+  "ID": "283",
+  "VALUE": "РФ + Дружественные страны",
+  },
+  {
+  "ID": "285",
+  "VALUE": "Вне РФ",
+  },
+]
 
-const locationFieldSettings = {
-  fieldName: 'UF_CRM_1679398471982',
-  fieldLabel: 'Локация',
-  type: 'select',
-  items: [
+const locationQuoteItems = [
+  {
+  "ID": "289",
+  "VALUE": "Junior",
+  },
+  {
+  "ID": "291",
+  "VALUE": "Middle",
+  },
+  {
+  "ID": "293",
+  "VALUE": "Middle+",
+  },
+  {
+  "ID": "295",
+  "VALUE": "Senior",
+  },
+  {
+  "ID": "297",
+  "VALUE": "Lead",
+  }
+  ]
+
+const locationDealItems = [
     {
     "ID": "167",
     "VALUE": "РФ"
@@ -63,10 +97,13 @@ const locationFieldSettings = {
     "VALUE": "Вне РФ"
     },
   ]
-}
 export const SpecialistInfoForm = ({ register, control, watch, errors, setValue }: IProps) => {
   const fileName = watch('resume')  
-  
+  const searchParams = useSearchParams()
+  const activeRequestId = searchParams.get('active_request_id')
+  const isQuote = !!activeRequestId
+  const gradeItems = isQuote ? gradeQuoteFieldItems : gradeDealItems
+  const locationItems = isQuote ? locationQuoteItems : locationDealItems
   return (
     <Stack rowGap={1.5}>
       <TextField label="ФИО специалиста" required {...register('specialistName', { required:  'Поле обязательно к заполнению' })} error={!!errors.specialistName?.message} helperText={errors.specialistName?.message} />
@@ -78,7 +115,7 @@ export const SpecialistInfoForm = ({ register, control, watch, errors, setValue 
             <FormControl required error={!!errors.grade?.message}>
             <InputLabel>Грейд</InputLabel>
             <Select input={<OutlinedInput label="Грейд"  />} value={value ?? ''} onChange={onChange}>
-              {gradeFieldSettings.items.map(({ ID, VALUE }) => <MenuItem key={ID} value={ID}>{VALUE}</MenuItem>)}
+              {gradeItems.map(({ ID, VALUE }) => <MenuItem key={ID} value={ID}>{VALUE}</MenuItem>)}
             </Select>
             {errors.grade?.message && <FormHelperText>{errors.grade?.message}</FormHelperText>}
           </FormControl>
@@ -89,7 +126,7 @@ export const SpecialistInfoForm = ({ register, control, watch, errors, setValue 
             <FormControl required error={!!errors.location?.message} {...field}>
               <InputLabel>Локация</InputLabel>
               <Select input={<OutlinedInput label="Локация" />} value={value ?? ''} onChange={onChange}>
-                {locationFieldSettings.items.map(({ ID, VALUE }) => <MenuItem key={ID} value={ID}>{VALUE}</MenuItem>)}
+                {locationItems.map(({ ID, VALUE }) => <MenuItem key={ID} value={ID}>{VALUE}</MenuItem>)}
               </Select>
               {errors.location?.message && <FormHelperText>{errors.grade?.message}</FormHelperText>}
           </FormControl>

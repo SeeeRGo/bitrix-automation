@@ -12,21 +12,22 @@ export async function POST(request: Request) {
     E-mail: ${contactEmail};\n
     ${contactPhone ? `Телефон: ${contactPhone};\n` : ''}
   `
-                  
+  const fields = {
+    UF_CRM_1684418451: "197", // Аутстафф
+    TITLE: `${specialistName} ${techStack.VALUE}`,
+    SOURCE_ID: "1", // Источник: Телеграм чат с партнёрами
+    CATEGORY_ID: '19', // Воронка Рекрутинг внешних аутстафферов
+    UF_CRM_1679398819: [grade], // Грейд
+    UF_CRM_1679398471982: location, // Локация
+    UF_CRM_1657089293199: rate,  // Ставка
+    UF_CRM_1699960799: techStack.ID, // Направление стек технологий
+    UF_CRM_653B806285E93: fileData, // Резюме
+    ASSIGNED_BY_ID: "125",  // Алекксандр Меренчук
+    UF_CRM_1700553861085: contactInfo
+  }
+  
   const dealId = await axios.post(`${process.env.BITRIX_WEBHOOK}/crm.deal.add`, {
-    fields: {
-      UF_CRM_1684418451: "197", // Аутстафф
-      TITLE: `${specialistName} ${techStack.VALUE}`,
-      SOURCE_ID: "1", // Источник: Телеграм чат с партнёрами
-      CATEGORY_ID: '19', // Воронка Рекрутинг внешних аутстафферов
-      UF_CRM_1679398819: [grade], // Грейд
-      UF_CRM_1679398471982: location, // Локация
-      UF_CRM_1657089293199: rate,  // Ставка
-      UF_CRM_1699960799: techStack.ID, // Направление стек технологий
-      UF_CRM_653B806285E93: fileData, // Резюме
-      ASSIGNED_BY_ID: "125",  // Алекксандр Меренчук
-      UF_CRM_1700553861085: contactInfo
-    }
+    fields
   })
   .then(async ({ data: { result } }) => {
     if (comment) {

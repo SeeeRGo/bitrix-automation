@@ -84,7 +84,7 @@ export const CandidateSuggestForm = ({ activeRequestId }: IProps) => {
             <Typography variant='h4' fontWeight="bold">Форма предложения кандидата</Typography>
           </div>
           <Typography variant='h6'>Информация о специалисте</Typography>
-          <SpecialistInfoForm register={register} control={control} watch={watch} setValue={setValue} errors={errors} />
+          <SpecialistInfoForm register={register} control={control} watch={watch} setValue={setValue} errors={errors} isQuote={!!activeRequestId} />
           <Typography variant='h6'>Контактная информация</Typography>
           <ContactInfoForm register={register} errors={errors} />
           <Button
@@ -98,11 +98,12 @@ export const CandidateSuggestForm = ({ activeRequestId }: IProps) => {
                   encodedResume = encodedResume.split(',').at(-1) ?? ''     
                 }
                 try {
-                  const res = await axios.post('/api', { ...data, fileData: {fileData: [resume?.name ?? '', encodedResume]} })
-                  console.log('res data', res.data);
                   if (activeRequestId) {
                     const quoteRes = await axios.post('/api/quotes', {...data, fileData: {fileData: [resume?.name ?? '', encodedResume]}, activeRequestId })
                     console.log('quoteRes data', quoteRes.data);
+                  } else {
+                    const res = await axios.post('/api', { ...data, fileData: {fileData: [resume?.name ?? '', encodedResume]} })
+                    console.log('res data', res.data);
                   }
                   setIsLoading(false)          
                   setIsSubmitted(true)
