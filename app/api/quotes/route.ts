@@ -16,7 +16,8 @@ export async function POST(request: Request) {
     Доп коммент: ${comment}
   `
 
-  const { UF_CRM_1657089402507: project, UF_CRM_1657089293199: rate1 } = await axios.get(`${process.env.BITRIX_WEBHOOK}/crm.deal.list?id=${activeRequestId ?? ''}`).then(({ data }) => data.result)
+  const { UF_CRM_1657089402507: project, UF_CRM_1657089293199: rate1 } = await axios.get(`${process.env.BITRIX_WEBHOOK}/crm.deal.get?id=${activeRequestId ?? ''}`).then(({ data }) => data.result)
+  
   const fields = {
     TITLE: `${techStack.VALUE} ${specialistName} Предложение от ${company}`,
     STATUS_ID: "C21:UC_NGHX3A", // Колонка - Прямые запросы в работе, воронки - аутстафф запросы
@@ -32,11 +33,22 @@ export async function POST(request: Request) {
     UF_CRM_64CCB79D1DDA6: [grade], // Грейд
     COMMENTS: contactInfo,
   }
-  console.log('quote fields', fields);
   
   const list = await axios.post(`${process.env.BITRIX_WEBHOOK}/crm.quote.add`, {
 		fields
-	}).then(({ data }) => data.result)
+	})  .then(async ({ data: { result } }) => {
+    if (contactInfo) {
+      axios.post(`${process.env.BITRIX_WEBHOOK}/crm.timeline.comment.add`, {
+        fields: {
+          ENTITY_ID: result,
+          ENTITY_TYPE: "quote",
+          COMMENT: `Контактная информация:\n${contactInfo}`,
+        }
+      })
+    }
+    return result
+  })
+  .then(({ data }) => data.result)
  
   return Response.json(list)
 }
