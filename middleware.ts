@@ -4,6 +4,8 @@ import { cookies } from 'next/headers'
 // 1. Specify protected and public routes
 const protectedRoutes = ['/admin']
 const publicRoutes = ['/']
+const isDev = process.env.NODE_ENV === 'development'
+const cookieString = isDev ? 'authjs.session-token' : '__Secure-authjs.session-token'
  
 export default async function middleware(req: NextRequest) {
   // 2. Check if the current route is protected or public
@@ -12,7 +14,7 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path)
  
   // 3. Decrypt the session from the cookie
-  const cookie = cookies().get('__Secure-authjs.session-token')?.value
+  const cookie = cookies().get(cookieString)?.value
   const session = cookie  
  
   // 5. Redirect to /login if the user is not authenticated
