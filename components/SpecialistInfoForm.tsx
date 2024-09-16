@@ -37,7 +37,7 @@ const gradeDealItems = [
     "VALUE": "Lead"
     }
   ]
-const gradeQuoteFieldItems = [
+const locationQuoteItems = [
   {
   "ID": "277",
   "VALUE": "РФ",
@@ -56,7 +56,7 @@ const gradeQuoteFieldItems = [
   },
 ]
 
-const locationQuoteItems = [
+const gradeQuoteItems = [
   {
   "ID": "289",
   "VALUE": "Junior",
@@ -102,7 +102,7 @@ export const SpecialistInfoForm = ({ register, control, watch, errors, setValue 
   const searchParams = useSearchParams()
   const activeRequestId = searchParams.get('active_request_id')
   const isQuote = !!activeRequestId
-  const gradeItems = isQuote ? gradeQuoteFieldItems : gradeDealItems
+  const gradeItems = isQuote ? gradeQuoteItems : gradeDealItems
   const locationItems = isQuote ? locationQuoteItems : locationDealItems
   return (
     <Stack rowGap={1.5}>

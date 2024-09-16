@@ -19,11 +19,15 @@ export default function TechStackSelect({ techStack, setTechStack, error }: IPro
   const [options, setOptions] = React.useState<TechStack[]>([]);
   
   const loadOptions = React.useCallback(
-    () => {
+    (activeRequestId: string | null) => {
       axios
         .get(`/techstack${activeRequestId ? '?is_quote=true' : ''}`)
-        .then(({ data: { result: { LIST } }}) => setOptions(LIST))
-    }, [activeRequestId]
+        .then(({ data: { result: { LIST } }}) => {
+          console.log('list', LIST);
+          
+          return setOptions(LIST);
+        })
+    }, []
   )
   const searchDelayed = React.useMemo(
     () => debounce(loadOptions, 150),
@@ -31,8 +35,8 @@ export default function TechStackSelect({ techStack, setTechStack, error }: IPro
   )
   
   React.useEffect(() => {
-    searchDelayed()
-  }, [searchDelayed]);
+    searchDelayed(activeRequestId)
+  }, [searchDelayed, activeRequestId]);
 
   return (
     <Autocomplete
@@ -41,17 +45,17 @@ export default function TechStackSelect({ techStack, setTechStack, error }: IPro
         typeof option === 'string' ? option : option.VALUE
       }
       filterOptions={(x) => x}
-      options={options.filter(option => option.VALUE.includes(inputValue))}
+      options={options.filter(option => (option.VALUE.toLocaleLowerCase()).includes(inputValue.toLocaleLowerCase()))}
       autoComplete
       includeInputInList
       filterSelectedOptions
-      value={techStack ?? {ID: '', VALUE: ''}}
+      value={techStack}
       noOptionsText="Нет подходящих вариантов"
       onChange={(event: any, newValue: TechStack | null) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setTechStack(newValue);
       }}
-      onInputChange={(event, newInputValue) => {
+      onInputChange={(event, newInputValue) => {        
         setInputValue(newInputValue);
       }}
       renderInput={(params) => (

@@ -6,7 +6,8 @@ export async function GET(request: NextRequest) {
   const isQuote = searchParams.get('is_quote')
 
   const fieldId = isQuote === 'true' ? '1039' : '1037'
+  const entity = isQuote === 'true' ? 'quote' : 'deal'
   const res = await axios
-    .get(`${process.env.BITRIX_WEBHOOK}/crm.deal.userfield.get?id=${fieldId}`)
+    .get(`${process.env.BITRIX_WEBHOOK}/crm.${entity}.userfield.get?id=${fieldId}`)
   return NextResponse.json(res.data, { status: 200 })
 }
