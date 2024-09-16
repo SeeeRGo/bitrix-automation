@@ -28,7 +28,7 @@ export default function TechStackSelect({ techStack, setTechStack, error }: IPro
           return setOptions(LIST);
         })
     }, []
-  )
+  )  
   const searchDelayed = React.useMemo(
     () => debounce(loadOptions, 150),
     [loadOptions]
@@ -48,11 +48,10 @@ export default function TechStackSelect({ techStack, setTechStack, error }: IPro
       options={options.filter(option => (option.VALUE.toLocaleLowerCase()).includes(inputValue.toLocaleLowerCase()))}
       autoComplete
       includeInputInList
-      filterSelectedOptions
       value={techStack}
       noOptionsText="Нет подходящих вариантов"
       onChange={(event: any, newValue: TechStack | null) => {
-        setOptions(newValue ? [newValue, ...options] : options);
+        setOptions(newValue ? [newValue, ...options.filter(({ ID }) => ID !== newValue.ID)] : options);
         setTechStack(newValue);
       }}
       onInputChange={(event, newInputValue) => {        
