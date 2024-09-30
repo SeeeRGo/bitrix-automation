@@ -12,7 +12,7 @@ export default function Admin() {
   useEffect(() => {
     axios.get('/api/active_requests').then(({ data }) => setData(data))
   }, [])
-  
+
   return (
     <main style={{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: 16 }}>
       <Typography variant="h5">Прямые запросы в работе</Typography>

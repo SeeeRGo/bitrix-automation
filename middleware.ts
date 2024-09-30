@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
  
 // 1. Specify protected and public routes
 const protectedRoutes = ['/admin']
-const publicRoutes = ['/']
+const publicRoutes = ['/', '/login']
 const isDev = process.env.NODE_ENV === 'development'
 const cookieString = isDev ? 'authjs.session-token' : '__Secure-authjs.session-token'
  
@@ -19,7 +19,7 @@ export default async function middleware(req: NextRequest) {
  
   // 5. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session) {
-    return NextResponse.redirect(new URL('/', req.nextUrl))
+    return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
  
   return NextResponse.next()
