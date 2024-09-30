@@ -46,9 +46,9 @@ const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
   }
 }))
 interface IProps {
-  activeRequestId: string | null
+  activeRequestName: string | null
 }
-export const CandidateSuggestForm = ({ activeRequestId }: IProps) => {
+export const CandidateSuggestForm = ({ activeRequestName }: IProps) => {
   const {
     register,
     handleSubmit,
@@ -84,7 +84,7 @@ export const CandidateSuggestForm = ({ activeRequestId }: IProps) => {
             <Typography variant='h4' fontWeight="bold">Форма предложения кандидата</Typography>
           </div>
           <Typography variant='h6'>Информация о специалисте</Typography>
-          <SpecialistInfoForm register={register} control={control} watch={watch} setValue={setValue} errors={errors} isQuote={!!activeRequestId} />
+          <SpecialistInfoForm register={register} control={control} watch={watch} setValue={setValue} errors={errors} isQuote={!!activeRequestName} />
           <Typography variant='h6'>Контактная информация</Typography>
           <ContactInfoForm register={register} errors={errors} />
           <Button
@@ -98,8 +98,8 @@ export const CandidateSuggestForm = ({ activeRequestId }: IProps) => {
                   encodedResume = encodedResume.split(',').at(-1) ?? ''     
                 }
                 try {
-                  if (activeRequestId) {
-                    const quoteRes = await axios.post('/api/quotes', {...data, fileData: {fileData: [resume?.name ?? '', encodedResume]}, activeRequestId })
+                  if (activeRequestName) {
+                    const quoteRes = await axios.post('/api/quotes', {...data, fileData: {fileData: [resume?.name ?? '', encodedResume]}, activeRequestName })
                     console.log('quoteRes data', quoteRes.data);
                   } else {
                     const res = await axios.post('/api', { ...data, fileData: {fileData: [resume?.name ?? '', encodedResume]} })

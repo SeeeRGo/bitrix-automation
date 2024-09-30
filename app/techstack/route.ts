@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { NextRequest, NextResponse } from 'next/server'
- 
+
+export const revalidate = 0
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const isQuote = searchParams.get('is_quote')

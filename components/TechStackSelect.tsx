@@ -15,13 +15,13 @@ interface IProps {
 export default function TechStackSelect({ techStack, setTechStack, error }: IProps) {
   const [inputValue, setInputValue] = React.useState('');
   const searchParams = useSearchParams()
-  const activeRequestId = searchParams.get('active_request_id')
+  const activeRequestName = searchParams.get('active_request_name')
   const [options, setOptions] = React.useState<TechStack[]>([]);
   
   const loadOptions = React.useCallback(
-    (activeRequestId: string | null) => {
+    (requestName: string | null) => {
       axios
-        .get(`/techstack${activeRequestId ? '?is_quote=true' : ''}`)
+        .get(`/techstack${requestName ? '?is_quote=true' : ''}`)
         .then(({ data: { result: { LIST } }}) => {
           console.log('list', LIST);
           
@@ -35,8 +35,8 @@ export default function TechStackSelect({ techStack, setTechStack, error }: IPro
   )
   
   React.useEffect(() => {
-    searchDelayed(activeRequestId)
-  }, [searchDelayed, activeRequestId]);
+    searchDelayed(activeRequestName)
+  }, [searchDelayed, activeRequestName]);
 
   return (
     <Autocomplete

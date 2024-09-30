@@ -100,8 +100,8 @@ const locationDealItems = [
 export const SpecialistInfoForm = ({ register, control, watch, errors, setValue }: IProps) => {
   const fileName = watch('resume')  
   const searchParams = useSearchParams()
-  const activeRequestId = searchParams.get('active_request_id')
-  const isQuote = !!activeRequestId
+  const activeRequestName = searchParams.get('active_request_name')
+  const isQuote = !!activeRequestName
   const gradeItems = isQuote ? gradeQuoteItems : gradeDealItems
   const locationItems = isQuote ? locationQuoteItems : locationDealItems
   return (

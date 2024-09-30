@@ -23,8 +23,8 @@ export default function Admin() {
               <Typography>ID: {ID}</Typography>
               <Typography>TITLE: {TITLE}</Typography>
               <Typography>Project: {rest[projectField] ?? 'Нет информации по проекту'}</Typography>
-              <Typography><Link href={`https://bitrix-automation.vercel.app?active_request_id=${ID}`}>Ссылка для партнеров</Link><ContentCopy onClick={() => {
-                navigator.clipboard.writeText(`https://bitrix-automation.vercel.app?active_request_id=${ID}`)
+              <Typography><Link href={`https://bitrix-automation.vercel.app?active_request_name=${TITLE}`}>Ссылка для партнеров</Link><ContentCopy onClick={() => {
+                navigator.clipboard.writeText(`https://bitrix-automation.vercel.app?active_request_name=${TITLE}`)
                 setSuccess('Ссылка успешно скопирована')
               }} /></Typography>
             </Card>

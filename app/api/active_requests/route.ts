@@ -1,6 +1,6 @@
 import axios from "axios"
+import { activeRequestsColumn } from "../../../utils/constants";
 
-const activeRequestsColumn = 'C21:UC_NGHX3A'
 export const revalidate = 0
 export async function GET() {
                   

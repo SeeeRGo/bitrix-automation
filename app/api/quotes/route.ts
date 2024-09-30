@@ -1,11 +1,13 @@
 import axios from "axios"
 import { ApiInputs } from "../../types"
+import { activeRequestsColumn } from "../../../utils/constants"
 
 // const dealRateFieldName = 'UF_CRM_1657089293199'
 // const dealProjectFieldName = 'UF_CRM_1657089402507'
+const findDealByTitle = 'crm.deal.list?filter[STAGE_ID]=C21:UC_NGHX3A&filter[TITLE]=Back%20Python&select[]=*&select[]=UF_*'
 export async function POST(request: Request) {
-  const data: ApiInputs & { activeRequestId: string | null} = await request.json()
-  const { comment, company, contactEmail, contactName, contactPhone, contactPosition, contactTelegram, grade, location, fileData, specialistName, techStack, rate, activeRequestId } = data
+  const data: ApiInputs & { activeRequestName: string | null} = await request.json()
+  const { comment, company, contactEmail, contactName, contactPhone, contactPosition, contactTelegram, grade, location, fileData, specialistName, techStack, rate, activeRequestName } = data
   const contactInfo = `
     Компания: ${company};\n
     ФИО: ${contactName};\n
@@ -16,6 +18,7 @@ export async function POST(request: Request) {
     Доп коммент: ${comment}
   `
 
+  const activeRequestId = await axios.get(`${process.env.BITRIX_WEBHOOK}/crm.deal.list?filter[STAGE_ID]=${activeRequestsColumn}&filter[TITLE]=${encodeURIComponent(activeRequestName ?? '')}&select[]=*&select[]=UF_*`).then(({ data }) => data.result.at(0)?.ID)
   const { UF_CRM_1657089402507: project, UF_CRM_1657089293199: rate1 } = await axios.get(`${process.env.BITRIX_WEBHOOK}/crm.deal.get?id=${activeRequestId ?? ''}`).then(({ data }) => data.result)
   
   const fields = {
