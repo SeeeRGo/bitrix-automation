@@ -30,7 +30,7 @@ export default function TechStackSelect({ techStack, setTechStack, error }: IPro
     }, []
   )  
   const searchDelayed = React.useMemo(
-    () => debounce(loadOptions, 150),
+    () => debounce(loadOptions, 250),
     [loadOptions]
   )
   
