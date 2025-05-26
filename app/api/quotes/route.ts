@@ -4,10 +4,32 @@ import { activeRequestsColumn } from "../../../utils/constants"
 
 // const dealRateFieldName = 'UF_CRM_1657089293199'
 // const dealProjectFieldName = 'UF_CRM_1657089402507'
+const gradeQuoteItems = [
+  {
+  "ID": "289",
+  "VALUE": "Junior",
+  },
+  {
+  "ID": "291",
+  "VALUE": "Middle",
+  },
+  {
+  "ID": "293",
+  "VALUE": "Middle+",
+  },
+  {
+  "ID": "295",
+  "VALUE": "Senior",
+  },
+  {
+  "ID": "297",
+  "VALUE": "Lead",
+  }
+  ]
+
 export async function POST(request: Request) {
   const data: ApiInputs & { activeRequestName: string | null} = await request.json()
-  const { comment, company, education, educationProf, educationYear, contactName, contactTelegram, grade, country, city, fileData, specialistName,  rate, activeRequestName } = data
-  const contactInfo = `Компания: ${company};\nФИО: ${contactName};\nТелеграм: ${contactTelegram};`
+  const { comment, company, education, educationProf, educationYear, contactName, birthdate, contactTelegram, grade, country, city, fileData, specialistName,  rate, activeRequestName } = data
 
   const activeRequestId = await axios.get(`${process.env.BITRIX_WEBHOOK}/crm.deal.list?filter[STAGE_ID]=${activeRequestsColumn}&filter[TITLE]=${encodeURIComponent(activeRequestName ?? '')}&select[]=*&select[]=UF_*`).then(({ data }) => data.result.at(0)?.ID)
   const { UF_CRM_1657089402507: project, UF_CRM_1657089293199: rate1, UF_CRM_1699960799: techStackId } = await axios.get(`${process.env.BITRIX_WEBHOOK}/crm.deal.get?id=${activeRequestId ?? ''}`).then(({ data }) => data.result)
@@ -33,27 +55,22 @@ export async function POST(request: Request) {
     UF_CRM_QUOTE_1724244327601: rate, // Ставка специалиста
     UF_CRM_QUOTE_1724244360471: fileData, // Файл резюме
     UF_CRM_64CCB79D1DDA6: [grade], // Грейд
-    COMMENTS: contactInfo,
   }
 
   
   const quoteId = await axios.post(`${process.env.BITRIX_WEBHOOK}/crm.quote.add`, {
 		fields
 	}).then(async ({ data: { result } }) => {
-    console.warn('comment adding contactInfo', contactInfo);
-    if (contactInfo) {
       await axios.post(`${process.env.BITRIX_WEBHOOK}/crm.timeline.comment.add`, {
         fields: {
           ENTITY_ID: result,
           ENTITY_TYPE: "quote",
-          COMMENT: `Локация: ${country}, ${city}\nОбразование: ${education}, ${educationProf}, ${educationYear}\nКонтактная информация:\n${contactInfo}\nЧек-лист по требованиям:\n${comment}`,
+          COMMENT: `ФИО специалиста: ${specialistName};\nДата Рождения: ${birthdate};\nЛокация: ${country}, ${city};\nГрейд: ${gradeQuoteItems.find(({ ID }) => ID === grade)?.VALUE};\nОбразование: ${education}, ${educationProf}, ${educationYear};\nЧек-лист по требованиям:\n${comment};\n\nКонтактная информация:\nФИО контакта: ${contactName};\nКомпания: ${company};\nТелеграм: ${contactTelegram};`,
         }
       })
-    }
     return result
   }).catch(err => {
    console.warn('comment adding error', err);
-    
   })
   
   return Response.json({ message: `Форма успешно отправлена ${quoteId}` })
