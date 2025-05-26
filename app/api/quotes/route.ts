@@ -50,6 +50,9 @@ export async function POST(request: Request) {
       })
     }
     return result
+  }).catch(err => {
+   console.warn('comment adding error', err);
+    
   })
   
   return Response.json({ message: `Форма успешно отправлена ${quoteId}` })
