@@ -15,7 +15,9 @@ export async function POST(request: Request) {
   .get(`${process.env.BITRIX_WEBHOOK}/crm.deal.userfield.get?id=1037`)
   const resQuoteStacks = await axios
   .get(`${process.env.BITRIX_WEBHOOK}/crm.quote.userfield.get?id=1039`)
+  //@ts-ignore
   const techStackValue = resDealStacks.data.result.LIST.find(({ ID }) => `${ID}` === techStackId)?.VALUE
+  //@ts-ignore
   const techStackQuoteId = resQuoteStacks.data.result.LIST.find(({ VALUE }) => `${VALUE}` === techStackValue)?.ID
   
   const fields = {

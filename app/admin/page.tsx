@@ -18,7 +18,7 @@ export default function Admin() {
       <Typography variant="h5">Прямые запросы в работе</Typography>
       <Grid container rowGap={2} columnGap={2}>
         {data.map(({ ID, TITLE, ...rest }: any) => (
-          <Grid item key={ID}>
+          <Grid key={ID}>
             <Card sx={{ padding: 2 }}>
               <Typography>ID: {ID}</Typography>
               <Typography>TITLE: {TITLE}</Typography>
