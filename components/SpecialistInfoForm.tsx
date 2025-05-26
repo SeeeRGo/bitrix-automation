@@ -9,6 +9,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/ru';
+import dayjs from "dayjs";
 
 interface IProps {
   register: UseFormRegister<Inputs>
@@ -127,6 +128,11 @@ export const SpecialistInfoForm = ({ register, control, watch, errors, setValue 
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
                   <DatePicker
                       label="Дата Рождения"
+                      // value={value}
+                      onChange={(newDateValue) => {
+                          onChange(dayjs(newDateValue).format('DD.MM.YYYY'));
+                      }} //@ts-ignore
+                      renderInput={(params) => <TextField {...params} />}
                       {...field}
                   />
               </LocalizationProvider>
