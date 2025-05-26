@@ -40,8 +40,9 @@ export async function POST(request: Request) {
   const quoteId = await axios.post(`${process.env.BITRIX_WEBHOOK}/crm.quote.add`, {
 		fields
 	}).then(async ({ data: { result } }) => {
+    console.warn('comment adding contactInfo', contactInfo);
     if (contactInfo) {
-      axios.post(`${process.env.BITRIX_WEBHOOK}/crm.timeline.comment.add`, {
+      await axios.post(`${process.env.BITRIX_WEBHOOK}/crm.timeline.comment.add`, {
         fields: {
           ENTITY_ID: result,
           ENTITY_TYPE: "quote",
