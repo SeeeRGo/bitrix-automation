@@ -16,15 +16,17 @@ export interface TechStack {
 interface BaseInputs {
   company: string
   contactName: string
-  contactPosition: string
-  contactEmail: string
-  contactPhone: string
   contactTelegram: string
   specialistName: string
   techStack: TechStack
   grade: string
   rate: string
-  location: string
+  country: string
+  city: string
+  birthdate: string
+  education: string
+  educationYear: string
+  educationProf: string
   comment: string
 }
 

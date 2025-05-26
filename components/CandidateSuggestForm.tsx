@@ -71,7 +71,12 @@ export const CandidateSuggestForm = ({ activeRequestName }: IProps) => {
     ) : isSubmitted ? <Submitted onReturn={() => {
           resetField('comment');
           resetField('grade');
-          resetField('location');
+          resetField('city');
+          resetField('country');
+          resetField('education');
+          resetField('educationYear');
+          resetField('educationProf');
+          resetField('birthdate');
           resetField('rate');
           resetField('resume');
           resetField('specialistName');
@@ -92,6 +97,8 @@ export const CandidateSuggestForm = ({ activeRequestName }: IProps) => {
             onClick={() => {
               setIsLoading(true)
               handleSubmit(async ({ resume, ...data}) => {
+                console.log('data', data);
+                
                 let encodedResume: string = ''
                 if (resume) {
                   encodedResume = await convertBase64(resume) as string
@@ -99,7 +106,10 @@ export const CandidateSuggestForm = ({ activeRequestName }: IProps) => {
                 }
                 try {
                   if (activeRequestName) {
-                    const quoteRes = await axios.post('/api/quotes', {...data, fileData: {fileData: [resume?.name ?? '', encodedResume]}, activeRequestName })
+                    const quoteRes = await axios.post('/api/quotes', {...data, fileData: {fileData: [
+                      resume?.name ?? '', encodedResume,
+                      resume?.name ?? '', encodedResume
+                    ]}, activeRequestName })
                     console.log('quoteRes data', quoteRes.data);
                   } else {
                     const res = await axios.post('/api', { ...data, fileData: {fileData: [resume?.name ?? '', encodedResume]} })
